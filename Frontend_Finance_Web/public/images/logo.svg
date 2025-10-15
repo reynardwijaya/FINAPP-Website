@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background Circle -->
+    <circle cx="60" cy="60" r="54" fill="url(#gradient)" />
+    
+    <!-- FP Letters -->
+    <path d="M45 35H55C58.866 35 62 38.134 62 42V48C62 51.866 58.866 55 55 55H45V35Z" fill="white"/>
+    <path d="M45 55H55C58.866 55 62 58.134 62 62V68C62 71.866 58.866 75 55 75H45V55Z" fill="white"/>
+    <path d="M65 35H75V75H65V35Z" fill="white"/>
+    
+    <!-- Decorative Elements -->
+    <circle cx="60" cy="60" r="48" stroke="white" stroke-width="2" stroke-opacity="0.2"/>
+    <circle cx="60" cy="60" r="42" stroke="white" stroke-width="1" stroke-opacity="0.1"/>
+    
+    <!-- Gradient Definition -->
+    <defs>
+        <linearGradient id="gradient" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#4F46E5"/>
+            <stop offset="100%" stop-color="#7C3AED"/>
+        </linearGradient>
+    </defs>
+</svg> 

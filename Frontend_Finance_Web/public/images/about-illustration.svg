@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="600" height="400" viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background Elements -->
+    <circle cx="300" cy="200" r="180" fill="#F3F4F6"/>
+    <circle cx="300" cy="200" r="150" fill="white"/>
+    
+    <!-- Decorative Circles -->
+    <circle cx="150" cy="100" r="30" fill="url(#gradient)" fill-opacity="0.1"/>
+    <circle cx="450" cy="300" r="40" fill="url(#gradient)" fill-opacity="0.1"/>
+    <circle cx="400" cy="80" r="25" fill="url(#gradient)" fill-opacity="0.1"/>
+    
+    <!-- Main Illustration -->
+    <!-- Building -->
+    <rect x="200" y="150" width="200" height="150" rx="8" fill="#E5E7EB"/>
+    <rect x="220" y="170" width="40" height="40" rx="4" fill="url(#gradient)"/>
+    <rect x="280" y="170" width="40" height="40" rx="4" fill="url(#gradient)"/>
+    <rect x="340" y="170" width="40" height="40" rx="4" fill="url(#gradient)"/>
+    <rect x="220" y="230" width="40" height="40" rx="4" fill="url(#gradient)"/>
+    <rect x="280" y="230" width="40" height="40" rx="4" fill="url(#gradient)"/>
+    <rect x="340" y="230" width="40" height="40" rx="4" fill="url(#gradient)"/>
+    
+    <!-- Chart -->
+    <rect x="150" y="100" width="120" height="80" rx="8" fill="white" stroke="url(#gradient)" stroke-width="2"/>
+    <path d="M170 140 L190 130 L210 135 L230 120 L250 125" stroke="url(#gradient)" stroke-width="3" fill="none"/>
+    <circle cx="170" cy="140" r="3" fill="url(#gradient)"/>
+    <circle cx="190" cy="130" r="3" fill="url(#gradient)"/>
+    <circle cx="210" cy="135" r="3" fill="url(#gradient)"/>
+    <circle cx="230" cy="120" r="3" fill="url(#gradient)"/>
+    <circle cx="250" cy="125" r="3" fill="url(#gradient)"/>
+    
+    <!-- Document -->
+    <rect x="330" y="100" width="120" height="80" rx="8" fill="white" stroke="url(#gradient)" stroke-width="2"/>
+    <rect x="350" y="120" width="80" height="4" rx="2" fill="url(#gradient)"/>
+    <rect x="350" y="130" width="60" height="4" rx="2" fill="#E5E7EB"/>
+    <rect x="350" y="140" width="70" height="4" rx="2" fill="#E5E7EB"/>
+    <rect x="350" y="150" width="50" height="4" rx="2" fill="#E5E7EB"/>
+    
+    <!-- Floating Elements -->
+    <circle cx="180" cy="250" r="15" fill="url(#gradient)"/>
+    <rect x="380" y="250" width="30" height="30" rx="6" fill="url(#gradient)"/>
+    <path d="M250 80 L270 60 L290 80" stroke="url(#gradient)" stroke-width="3" fill="none"/>
+    
+    <!-- Gradient Definition -->
+    <defs>
+        <linearGradient id="gradient" x1="0" y1="0" x2="600" y2="400" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#4F46E5"/>
+            <stop offset="100%" stop-color="#7C3AED"/>
+        </linearGradient>
+    </defs>
+</svg> 

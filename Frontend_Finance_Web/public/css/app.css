@@ -1,0 +1,72 @@
+body {
+    font-family: "Inter", sans-serif;
+}
+
+#sidebar {
+    transition: transform 0.3s ease;
+    width: 240px;
+    flex-shrink: 0;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+
+#contentWrapper {
+    transition: margin-left 0.3s ease, width 0.3s ease;
+    width: 100%;
+    margin-left: 0;
+    max-width: 100vw;
+    box-sizing: border-box;
+}
+
+#contentWrapper.sidebar-open {
+    margin-left: 240px;
+    width: calc(100% - 240px);
+    max-width: calc(100vw - 240px);
+}
+
+table, th, td {
+    border: 2px solid #4a5a4a !important;
+}
+
+table {
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+thead tr {
+    background-color: #d1e7dd !important;
+    border-bottom: 3px solid #4a5a4a !important;
+}
+
+tbody tr {
+    border-bottom: 2px solid #4a5a4a !important;
+}
+
+tbody tr:last-child {
+    border-bottom: none !important;
+}
+
+section > div.bg-white {
+    border: 2px solid #4a5a4a;
+    box-shadow: 0 8px 20px rgba(74, 90, 74, 0.25);
+    border-radius: 1rem;
+}
+
+#sectionStatistics div.bg-gradient-to-br {
+    border: 2px solid #4a5a4a;
+    box-shadow: 0 8px 20px rgba(74, 90, 74, 0.25);
+    border-radius: 1rem;
+}
+
+#sectionDashboard > div.grid > div {
+    border: 2px solid rgba(255 255 255 / 0.6);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+#sectionDashboard > div.bg-white {
+    border: 2px solid #4a5a4a;
+    box-shadow: 0 8px 20px rgba(74, 90, 74, 0.25);
+    border-radius: 1rem;
+}
