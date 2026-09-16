@@ -8,24 +8,49 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
+
+	"github.com/joho/godotenv"
 
 	_ "github.com/go-sql-driver/mysql" // MySQL driver
 )
 
-// Database connection details
-const (
-	dbUser       = "root" // Default XAMPP MariaDB user
-	dbPassword   = ""     // Default XAMPP MariaDB password (empty)
-	dbHost       = "127.0.0.1"
-	dbPort       = "3306"
-	dbName       = "finapp"
-	geminiAPIKey = "AIzaSyAAjX4SmTRKANTs3-E0MEqHZockYoMwF4s"
-	geminiURL    = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + geminiAPIKey
+var (
+	dbUser       string
+	dbPassword   string
+	dbHost       string
+	dbPort       string
+	dbName       string
+	geminiAPIKey string
+	geminiURL    string
 )
 
 var db *sql.DB
 
+func getenv(key, fallback string) string {
+	if value := os.Getenv(key); value != "" {
+		return value
+	}
+	return fallback
+}
+
 func main() {
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found, relying on system environment variables")
+	}
+
+	dbUser = getenv("DB_USER", "root")
+	dbPassword = getenv("DB_PASSWORD", "")
+	dbHost = getenv("DB_HOST", "127.0.0.1")
+	dbPort = getenv("DB_PORT", "3306")
+	dbName = getenv("DB_NAME", "finapp")
+
+	geminiAPIKey = os.Getenv("GEMINI_API_KEY")
+	if geminiAPIKey == "" {
+		log.Fatal("GEMINI_API_KEY environment variable is required")
+	}
+	geminiURL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + geminiAPIKey
+
 	// Initialize database connection
 	var err error
 	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbUser, dbPassword, dbHost, dbPort, dbName)
