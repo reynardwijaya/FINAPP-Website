@@ -8,11 +8,9 @@ use App\Http\Controllers\AnalysisController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
-use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PasswordResetController;
 
 // Welcome page
 Route::get('/', function () { return view('welcome'); });
@@ -66,8 +64,6 @@ Route::get('/analyze-form', function () {
     return view('finance-analyzer');
 });
 
-Route::post('/finance/analyze', [FinanceController::class, 'analyzeFinancialData']);
-
 // Settings Routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
@@ -78,9 +74,3 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/settings/profile-picture', [SettingsController::class, 'updateProfilePicture'])->name('settings.updateProfilePicture');
     Route::delete('/settings/profile-picture', [SettingsController::class, 'deleteProfilePicture'])->name('settings.deleteProfilePicture');
 });
-
-// Password Reset Routes
-Route::get('/forgot-password', [PasswordResetController::class, 'showForgotPasswordForm'])
-    ->name('password.request');
-Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetPasswordForm'])
-    ->name('password.reset');
