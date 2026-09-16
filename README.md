@@ -1,10 +1,10 @@
 # Finapp 💰
 
-Finapp adalah aplikasi web pencatatan dan analisis keuangan yang dirancang khusus untuk pelaku UMKM. Alih-alih pusing dengan spreadsheet, pemilik usaha kecil bisa mencatat transaksi, memantau kondisi keuangan, dan mendapat rekomendasi berbasis AI hanya dalam beberapa klik.
+Finapp adalah aplikasi web pencatatan dan analisis keuangan yang dirancang khusus untuk pelaku UMKM. Alih-alih pusing dengan spreadsheet, pemilik usaha kecil bisa mencatat transaksi, memantau kondisi keuangan, dan mendapat rekomendasi otomatis hanya dalam beberapa klik.
 
 - 📊 Dashboard yang merangkum kondisi keuangan usaha secara sekilas
 - 💸 Pencatatan transaksi pemasukan & pengeluaran per kategori
-- 🤖 Analisis keuangan otomatis berbasis AI (Google Gemini) dengan rekomendasi actionable
+- 🧮 Analisis keuangan otomatis dengan rekomendasi actionable berbasis data transaksi
 - 📈 Laporan & statistik keuangan untuk melihat tren dari waktu ke waktu
 - 📚 Artikel edukasi finansial khusus untuk pelaku UMKM
 
