@@ -1,107 +1,94 @@
 @extends('layouts.app')
 
-@section('title', 'Reports - Finapp')
-
-@section('header', 'Financial Reports')
+@section('title', 'Laporan - Finapp')
 
 @section('content')
+@php
+    $income = $transactions->where('type', 'income')->sum('amount');
+    $expense = $transactions->where('type', 'expense')->sum('amount');
+    $net = $income - $expense;
+    $rate = $income > 0 ? ($net / $income) * 100 : 0;
+    $rp = fn ($n) => ($n < 0 ? '−' : '').'Rp '.number_format(abs($n), 0, ',', '.');
+    $filtered = request()->hasAny(['start_date', 'end_date', 'type', 'category_id']);
+@endphp
+
+<x-page-header title="Laporan" subtitle="Saring transaksi berdasarkan tanggal dan jenis untuk melihat ringkasannya." />
+
 <div class="space-y-6">
-    <!-- Header Section -->
-    <div class="card bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6" data-aos="fade-up">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Financial Reports</h1>
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Track and analyze your financial transactions</p>
+    {{-- Filter (GET, query string sama dengan sebelumnya) --}}
+    <x-card>
+        <form method="GET" action="{{ route('reports.index') }}" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:items-end">
+            <x-input name="start_date" type="date" label="Dari tanggal" :value="request('start_date')" />
+            <x-input name="end_date" type="date" label="Sampai tanggal" :value="request('end_date')" />
+            <x-select name="type" label="Jenis">
+                <option value="">Semua jenis</option>
+                <option value="income" @selected(request('type') === 'income')>Pemasukan</option>
+                <option value="expense" @selected(request('type') === 'expense')>Pengeluaran</option>
+            </x-select>
+            <div class="flex gap-3">
+                <x-button type="submit" icon="search" class="flex-1">Terapkan</x-button>
+                @if ($filtered)
+                    <x-button :href="route('reports.index')" variant="secondary">Atur ulang</x-button>
+                @endif
             </div>
-        </div>
-    </div>
+        </form>
+    </x-card>
 
-    <!-- Summary Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <!-- Total Income -->
-        <div class="card bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 rounded-lg shadow-lg p-6 transform hover:scale-105 transition-transform duration-200" data-aos="fade-up" data-aos-delay="100">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h3 class="text-gray-600 dark:text-gray-300 text-sm font-medium">Total Income</h3>
-                    <p class="text-2xl font-bold text-green-600 dark:text-green-400 mt-2">
-                        Rp {{ number_format($transactions->where('type', 'income')->sum('amount'), 0, ',', '.') }}
-                    </p>
-                </div>
-                <div class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-800 flex items-center justify-center">
-                    <i class="fas fa-arrow-up text-green-600 dark:text-green-400 text-xl"></i>
-                </div>
-            </div>
-            <div class="mt-4">
-                <div class="flex items-center text-sm text-green-600 dark:text-green-400">
-                    <span class="font-medium">This Month</span>
-                </div>
-            </div>
+    {{-- Ringkasan: dihitung dari transaksi yang tampil di halaman ini --}}
+    <section aria-label="Ringkasan laporan" class="space-y-3">
+        <p class="text-footnote text-fg-muted">Ringkasan dari {{ $transactions->count() }} transaksi di halaman ini.</p>
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <x-stat label="Pemasukan" icon="arrow-up-right" tone="success" :value="$rp($income)" />
+            <x-stat label="Pengeluaran" icon="arrow-down-left" tone="danger" :value="$rp($expense)" />
+            <x-stat label="Selisih" icon="wallet" tone="accent" :value="$rp($net)" hint="Pemasukan dikurangi pengeluaran" />
+            <x-stat label="Sisa dari pemasukan" icon="percent" tone="warning" :value="number_format($rate, 1, ',', '.').'%'" />
         </div>
+    </section>
 
-        <!-- Total Expenses -->
-        <div class="card bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900 dark:to-red-800 rounded-lg shadow-lg p-6 transform hover:scale-105 transition-transform duration-200" data-aos="fade-up" data-aos-delay="200">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h3 class="text-gray-600 dark:text-gray-300 text-sm font-medium">Total Expenses</h3>
-                    <p class="text-2xl font-bold text-red-600 dark:text-red-400 mt-2">
-                        Rp {{ number_format($transactions->where('type', 'expense')->sum('amount'), 0, ',', '.') }}
-                    </p>
-                </div>
-                <div class="w-12 h-12 rounded-full bg-red-100 dark:bg-red-800 flex items-center justify-center">
-                    <i class="fas fa-arrow-down text-red-600 dark:text-red-400 text-xl"></i>
-                </div>
+    <x-card padding="none" title="Daftar transaksi">
+        @if ($transactions->isEmpty())
+            <x-empty-state icon="search" title="Tidak ada transaksi yang cocok"
+                           :description="$filtered ? 'Coba ubah rentang tanggal atau jenis transaksi.' : 'Catat transaksi untuk mulai melihat laporan.'">
+                @if ($filtered)
+                    <x-button :href="route('reports.index')" variant="secondary">Atur ulang filter</x-button>
+                @else
+                    <x-button :href="route('transactions.create')" icon="plus">Catat transaksi</x-button>
+                @endif
+            </x-empty-state>
+        @else
+            <div class="divide-y divide-line px-5 md:hidden">
+                @foreach ($transactions as $transaction)
+                    <x-transaction-item :transaction="$transaction" />
+                @endforeach
             </div>
-            <div class="mt-4">
-                <div class="flex items-center text-sm text-red-600 dark:text-red-400">
-                    <span class="font-medium">This Month</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Net Balance -->
-        <div class="card bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800 rounded-lg shadow-lg p-6 transform hover:scale-105 transition-transform duration-200" data-aos="fade-up" data-aos-delay="300">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h3 class="text-gray-600 dark:text-gray-300 text-sm font-medium">Net Balance</h3>
-                    <p class="text-2xl font-bold text-blue-600 dark:text-blue-400 mt-2">
-                        Rp {{ number_format($transactions->where('type', 'income')->sum('amount') - $transactions->where('type', 'expense')->sum('amount'), 0, ',', '.') }}
-                    </p>
-                </div>
-                <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-800 flex items-center justify-center">
-                    <i class="fas fa-balance-scale text-blue-600 dark:text-blue-400 text-xl"></i>
-                </div>
-            </div>
-            <div class="mt-4">
-                <div class="flex items-center text-sm text-blue-600 dark:text-blue-400">
-                    <span class="font-medium">This Month</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Savings Rate -->
-        <div class="card bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900 dark:to-purple-800 rounded-lg shadow-lg p-6 transform hover:scale-105 transition-transform duration-200" data-aos="fade-up" data-aos-delay="400">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h3 class="text-gray-600 dark:text-gray-300 text-sm font-medium">Savings Rate</h3>
-                    @php
-                        $income = $transactions->where('type', 'income')->sum('amount');
-                        $expenses = $transactions->where('type', 'expense')->sum('amount');
-                        $savingsRate = $income > 0 ? (($income - $expenses) / $income) * 100 : 0;
-                    @endphp
-                    <p class="text-2xl font-bold text-purple-600 dark:text-purple-400 mt-2">
-                        {{ number_format($savingsRate, 1) }}%
-                    </p>
-                </div>
-                <div class="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-800 flex items-center justify-center">
-                    <i class="fas fa-piggy-bank text-purple-600 dark:text-purple-400 text-xl"></i>
-                </div>
-            </div>
-            <div class="mt-4">
-                <div class="flex items-center text-sm text-purple-600 dark:text-purple-400">
-                    <span class="font-medium">This Month</span>
-                </div>
-            </div>
-        </div>
-    </div>
+            <x-table class="hidden md:block">
+                <thead>
+                    <tr><th>Tanggal</th><th>Jenis</th><th>Kategori</th><th>Deskripsi</th><th class="text-right">Jumlah</th></tr>
+                </thead>
+                <tbody>
+                    @foreach ($transactions as $transaction)
+                        <tr>
+                            <td class="whitespace-nowrap text-fg-muted">{{ $transaction->transaction_date?->locale('id')->translatedFormat('d M Y') ?? '-' }}</td>
+                            <td><x-transaction-type :type="$transaction->type" /></td>
+                            <td>
+                                @if ($transaction->category)
+                                    <span class="inline-flex items-center gap-2">
+                                        <span class="size-2.5 rounded-full" style="background-color: {{ $transaction->category->color }}"></span>{{ $transaction->category->name }}
+                                    </span>
+                                @else
+                                    -
+                                @endif
+                            </td>
+                            <td class="max-w-64 truncate text-fg-muted">{{ $transaction->description ?? '-' }}</td>
+                            <td class="text-right"><x-amount :value="$transaction->amount" :type="$transaction->type" /></td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </x-table>
+            @if ($transactions->hasPages())
+                <div class="border-t border-line px-5 py-4 sm:px-6">{{ $transactions->appends(request()->query())->links() }}</div>
+            @endif
+        @endif
+    </x-card>
 </div>
-@endsection 
+@endsection

@@ -1,80 +1,41 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Profile - Finapp')
-
-@section('header', 'Edit Profile')
+@section('title', 'Ubah Profil - Finapp')
 
 @section('content')
-<div class="max-w-2xl mx-auto">
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Profile Information</h2>
-        
-        <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Profile Picture</label>
-            <div class="flex items-center space-x-4 mb-4">
-                <img class="h-24 w-24 rounded-full object-cover" src="{{ auth()->user()->profile_photo_url ?? asset('images/default_profile.png') }}" alt="{{ auth()->user()->username }}" />
-                <form action="{{ route('profile.updateProfilePicture') }}" method="POST" enctype="multipart/form-data" class="flex flex-col space-y-2">
-                    @csrf
-                    <label for="profile_picture" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Upload New Picture</label>
-                    <input type="file" name="profile_picture" id="profile_picture" class="block w-full text-sm text-gray-900 dark:text-gray-200 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900 dark:file:text-blue-300 dark:hover:file:bg-blue-800 cursor-pointer">
-                    @error('profile_picture')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                    <div class="flex space-x-2 mt-2">
-                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Update Profile Picture</button>
-                        @if(auth()->user()->profile_picture)
-                            <form id="delete-profile-picture-form" action="{{ route('profile.updateProfilePicture') }}" method="POST" style="display: inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">Delete Picture</button>
-                            </form>
-                        @endif
-                    </div>
-                </form>
+@php $user = auth()->user(); @endphp
+<div class="mx-auto max-w-2xl space-y-6">
+    <x-page-header title="Ubah profil" subtitle="Perbarui foto, nama pengguna, dan email." />
+
+    <x-card title="Foto profil">
+        <form action="{{ route('profile.updateProfilePicture') }}" method="POST" enctype="multipart/form-data" class="flex flex-col gap-5 sm:flex-row sm:items-center">
+            @csrf
+            <x-avatar :user="$user" size="size-20" class="!text-title" />
+            <div class="min-w-0 flex-1 space-y-2">
+                <label for="profile_picture" class="block text-callout font-medium text-fg">Pilih foto baru</label>
+                <input type="file" name="profile_picture" id="profile_picture" accept="image/png,image/jpeg,image/gif" required
+                       class="block w-full text-callout text-fg-muted file:mr-4 file:min-h-11 file:cursor-pointer file:rounded-control file:border-0 file:bg-accent-soft file:px-4 file:font-medium file:text-accent hover:file:brightness-95">
+                @error('profile_picture')
+                    <p class="flex items-start gap-1.5 text-footnote text-danger-fg"><x-icon name="alert-circle" class="mt-px size-4" />{{ $message }}</p>
+                @else
+                    <p class="text-footnote text-fg-muted">JPG, PNG, atau GIF. Maksimal 2 MB.</p>
+                @enderror
             </div>
-        </div>
-        
-        <form method="POST" action="{{ route('profile.update') }}" class="space-y-6">
+            <x-button type="submit" variant="secondary" icon="camera">Unggah</x-button>
+        </form>
+    </x-card>
+
+    <x-card title="Informasi akun">
+        <form method="POST" action="{{ route('profile.update') }}" class="space-y-5">
             @csrf
             @method('PUT')
-            
-            <div>
-                <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Username</label>
-                <input type="text" 
-                       name="username" 
-                       id="username" 
-                       value="{{ auth()->user()->username }}" 
-                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
-                       required>
-                @error('username')
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                @enderror
-            </div>
-            
-            <div>
-                <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
-                <input type="email" 
-                       name="email" 
-                       id="email" 
-                       value="{{ auth()->user()->email }}" 
-                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
-                       required>
-                @error('email')
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                @enderror
-            </div>
-            
-            <div class="flex items-center justify-end space-x-4 mt-8">
-                <a href="{{ route('dashboard') }}" 
-                   class="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-                    Cancel
-                </a>
-                <button type="submit" 
-                        class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
-                    Update Profile
-                </button>
+            <x-input name="username" label="Nama pengguna" :value="$user->username" autocomplete="username" required />
+            <x-input name="email" type="email" label="Email" :value="$user->email" autocomplete="email" required />
+            <div class="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
+                <x-button :href="route('profile.show')" variant="secondary">Batal</x-button>
+                <x-button type="submit" icon="check">Simpan perubahan</x-button>
             </div>
         </form>
-    </div>
+    </x-card>
 </div>
-@endsection 
+@endsection

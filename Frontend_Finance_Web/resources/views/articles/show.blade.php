@@ -2,179 +2,82 @@
 
 @section('title', $article->title . ' - Finapp')
 
-@section('header', 'Article Details')
-
 @section('content')
-<div class="max-w-4xl mx-auto space-y-6">
-    <!-- Article Header -->
-    <div class="card bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden" data-aos="fade-up">
-        @if($article->image_url)
-            <div class="relative h-96">
-                <img src="{{ $article->image_url }}" 
-                     alt="{{ $article->title }}" 
-                     class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-gradient-to-t from-gray-900/50 to-transparent"></div>
-            </div>
-        @endif
-        <div class="p-8">
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center space-x-4">
-                    <span class="px-3 py-1 text-sm font-medium rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200">
-                        {{ $article->category }}
-                    </span>
-                    <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                        <i class="fas fa-clock mr-2"></i>
-                        {{ $article->reading_time }} min read
-                    </div>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <button class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors" onclick="shareArticle()">
-                        <i class="fas fa-share-alt"></i>
-                    </button>
-                    <button class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors" onclick="bookmarkArticle()">
-                        <i class="fas fa-bookmark"></i>
-                    </button>
-                </div>
-            </div>
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">{{ $article->title }}</h1>
-            <p class="text-gray-600 dark:text-gray-300 mb-4">By {{ $article->author }} | {{ $article->created_at->format('M d, Y') }}</p>
-            
-            @if($article->tags)
-                <div class="flex flex-wrap gap-2 mb-6">
-                    @foreach($article->formatted_tags as $tag)
-                        <a href="{{ route('articles.index', ['tag' => $tag['slug']]) }}" 
-                           class="px-3 py-1 text-sm font-medium rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-                            #{{ $tag['name'] }}
-                        </a>
-                    @endforeach
-                </div>
+<div class="mx-auto max-w-3xl">
+    <a href="{{ route('articles.index') }}" class="mb-5 inline-flex min-h-11 items-center gap-2 text-callout font-medium text-fg-muted transition-colors hover:text-fg">
+        <x-icon name="arrow-left" class="size-4" />Kembali ke artikel
+    </a>
+
+    <article class="space-y-6">
+        <x-card padding="none">
+            @if ($article->image_url)
+                <img src="{{ $article->image_url }}" alt="" class="h-56 w-full object-cover sm:h-80">
             @endif
-
-            <div class="flex items-center space-x-4 mb-8">
-                <div class="flex items-center space-x-2">
-                    <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
-                        <i class="fas fa-user text-gray-500 dark:text-gray-400"></i>
-                    </div>
-                    <div>
-                        <p class="text-sm font-medium text-gray-900 dark:text-white">{{ $article->author }}</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Financial Expert</p>
-                    </div>
+            <div class="p-6 sm:p-8">
+                <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+                    <x-badge tone="accent">{{ $article->category->name ?? 'Umum' }}</x-badge>
+                    <span class="flex items-center gap-1.5 text-footnote text-fg-muted"><x-icon name="clock" class="size-3.5" />{{ $article->reading_time }} menit baca</span>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Article Content -->
-    <div class="card bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8" data-aos="fade-up" data-aos-delay="100">
-        <div class="prose dark:prose-invert max-w-none">
-            {!! $article->content !!}
-        </div>
-    </div>
-
-    <!-- Article Tags -->
-    @if($article->tags)
-    <div class="card bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6" data-aos="fade-up" data-aos-delay="200">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-            <i class="fas fa-tags mr-2"></i>Article Tags
-        </h2>
-        <div class="flex flex-wrap gap-2">
-            @foreach($article->formatted_tags as $tag)
-                <a href="{{ route('articles.index', ['tag' => $tag['slug']]) }}" 
-                   class="px-3 py-1 text-sm font-medium rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 hover:bg-indigo-200 dark:hover:bg-indigo-800 transition-colors">
-                    #{{ $tag['name'] }}
-                </a>
-            @endforeach
-        </div>
-    </div>
-    @endif
-
-    <!-- Related Articles -->
-    @if($relatedArticles->isNotEmpty())
-    <div class="card bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8" data-aos="fade-up" data-aos-delay="300">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-            <i class="fas fa-book text-indigo-500 mr-2"></i>
-            Related Articles
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            @foreach($relatedArticles as $related)
-            <a href="{{ route('articles.show', $related) }}" 
-               class="card bg-gray-50 dark:bg-gray-700 rounded-lg p-6 hover-scale">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200">
-                        {{ $related->category }}
-                    </span>
-                    <span class="text-xs text-gray-500 dark:text-gray-400">
-                        <i class="fas fa-clock mr-1"></i>
-                        {{ $related->reading_time }} min read
-                    </span>
-                </div>
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
-                    {{ $related->title }}
-                </h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-2">
-                    {{ Str::limit(strip_tags($related->content), 100) }}
+                <h1 class="mt-4 text-title text-fg sm:text-largetitle">{{ $article->title }}</h1>
+                <p class="mt-3 text-callout text-fg-muted">
+                    Oleh <span class="font-medium text-fg">{{ $article->author }}</span> ·
+                    {{ $article->created_at->locale('id')->translatedFormat('d F Y') }}
                 </p>
-                @if($related->tags)
-                    <div class="flex flex-wrap gap-1 mb-2">
-                        @foreach($related->formatted_tags->take(2) as $tag)
-                            <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-300">
-                                #{{ $tag['name'] }}
-                            </span>
+
+                @if ($article->tags)
+                    <div class="mt-5 flex flex-wrap gap-2">
+                        @foreach ($article->tags as $tag)
+                            <a href="{{ route('articles.index', ['tag' => $tag]) }}" class="inline-flex min-h-9 items-center rounded-full bg-surface-muted px-3.5 text-footnote font-medium text-fg-muted transition-colors hover:text-fg">#{{ $tag }}</a>
                         @endforeach
                     </div>
                 @endif
-            </a>
-            @endforeach
-        </div>
-    </div>
-    @endif
+            </div>
+        </x-card>
 
-    <!-- Share and Navigation -->
-    <div class="flex items-center justify-between" data-aos="fade-up" data-aos-delay="400">
-        <a href="{{ route('articles.index') }}" 
-           class="inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors">
-            <i class="fas fa-arrow-left mr-2"></i>
-            Back to Articles
-        </a>
-        <div class="flex items-center space-x-4">
-            <button onclick="shareArticle()" class="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors">
-                <i class="fas fa-share-alt mr-2"></i>
-                Share Article
-            </button>
-            <button onclick="bookmarkArticle()" class="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors">
-                <i class="fas fa-bookmark mr-2"></i>
-                Bookmark
-            </button>
+        <x-card padding="lg">
+            <div class="article-body">{!! $article->content !!}</div>
+        </x-card>
+
+        @if ($relatedArticles->isNotEmpty())
+            <section aria-labelledby="related-title" class="pt-2">
+                <h2 id="related-title" class="mb-4 text-title text-fg">Artikel terkait</h2>
+                <div class="grid gap-4 sm:grid-cols-2">
+                    @foreach ($relatedArticles as $related)
+                        <x-card as="a" interactive :href="route('articles.show', $related)" class="block p-5">
+                            <div class="flex items-center justify-between gap-3">
+                                <x-badge tone="accent">{{ $related->category->name ?? 'Umum' }}</x-badge>
+                                <span class="text-footnote text-fg-muted">{{ $related->reading_time }} menit baca</span>
+                            </div>
+                            <h3 class="mt-3 line-clamp-2 text-headline text-fg">{{ $related->title }}</h3>
+                            <p class="mt-1.5 line-clamp-2 text-callout text-fg-muted">{{ Str::limit(strip_tags($related->content), 100) }}</p>
+                        </x-card>
+                    @endforeach
+                </div>
+            </section>
+        @endif
+
+        <div class="flex items-center justify-between gap-3 pt-2">
+            <x-button :href="route('articles.index')" variant="secondary" icon="arrow-left">Semua artikel</x-button>
+            <x-button variant="soft" icon="arrow-up-right" onclick="shareArticle()">Bagikan</x-button>
         </div>
-    </div>
+    </article>
 </div>
+@endsection
 
 @push('scripts')
 <script>
-function shareArticle() {
+async function shareArticle() {
+    const data = { title: @js($article->title), text: 'Baca artikel ini di Finapp', url: window.location.href };
     if (navigator.share) {
-        navigator.share({
-            title: '{{ $article->title }}',
-            text: 'Check out this article on Finapp',
-            url: window.location.href,
-        })
-        .catch(console.error);
-    } else {
-        // Fallback for browsers that don't support the Web Share API
-        const dummy = document.createElement('input');
-        document.body.appendChild(dummy);
-        dummy.value = window.location.href;
-        dummy.select();
-        document.execCommand('copy');
-        document.body.removeChild(dummy);
-        alert('Link copied to clipboard!');
+        try { await navigator.share(data); } catch (e) { /* dibatalkan pengguna */ }
+        return;
     }
-}
-
-function bookmarkArticle() {
-    // Implement bookmark functionality
-    alert('Bookmark feature coming soon!');
+    try {
+        await navigator.clipboard.writeText(data.url);
+        window.Finapp.toast('Tautan disalin ke clipboard', 'success');
+    } catch (e) {
+        window.Finapp.toast('Tautan tidak bisa disalin. Salin dari bilah alamat.', 'error');
+    }
 }
 </script>
 @endpush
-@endsection 

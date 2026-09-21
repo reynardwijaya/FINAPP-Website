@@ -52,7 +52,7 @@ class PagesRenderTest extends TestCase
             '/articles',
             '/categories',
             '/categories/create',
-            // '/profile' (bug lama: article_views() tidak ada) diaktifkan lagi di fase profil
+            '/profile',
             '/profile/edit',
             '/settings',
         ]);

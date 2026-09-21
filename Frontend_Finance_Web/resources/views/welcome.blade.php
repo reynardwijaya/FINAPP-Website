@@ -1,423 +1,155 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finapp - Smart Financial Planning for UMKM</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    animation: {
-                        'gradient-x': 'gradient-x 15s ease infinite',
-                        'gradient-y': 'gradient-y 15s ease infinite',
-                        'gradient-xy': 'gradient-xy 15s ease infinite',
-                        'float': 'float 6s ease-in-out infinite',
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                    },
-                    keyframes: {
-                        'gradient-y': {
-                            '0%, 100%': {
-                                'background-size': '400% 400%',
-                                'background-position': 'center top'
-                            },
-                            '50%': {
-                                'background-size': '200% 200%',
-                                'background-position': 'center center'
-                            }
-                        },
-                        'gradient-x': {
-                            '0%, 100%': {
-                                'background-size': '200% 200%',
-                                'background-position': 'left center'
-                            },
-                            '50%': {
-                                'background-size': '200% 200%',
-                                'background-position': 'right center'
-                            }
-                        },
-                        'gradient-xy': {
-                            '0%, 100%': {
-                                'background-size': '400% 400%',
-                                'background-position': 'left center'
-                            },
-                            '50%': {
-                                'background-size': '200% 200%',
-                                'background-position': 'right center'
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        .gradient-text {
-            background: linear-gradient(45deg, #4F46E5, #7C3AED);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 200% 200%;
-            animation: gradient-xy 15s ease infinite;
-        }
-        .hover-scale {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .hover-scale:hover {
-            transform: scale(1.05);
-        }
-        .animate-float {
-            animation: float 6s ease-in-out infinite;
-        }
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-            100% { transform: translateY(0px); }
-        }
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .dark .glass-effect {
-            background: rgba(17, 24, 39, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .feature-card {
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-        }
-        .feature-card:hover {
-            border-color: #4F46E5;
-            box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.1), 0 10px 10px -5px rgba(79, 70, 229, 0.04);
-        }
-        .dark .feature-card {
-            background: rgba(17, 24, 39, 0.7);
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-        .dark .feature-card:hover {
-            border-color: #7C3AED;
-            box-shadow: 0 20px 25px -5px rgba(124, 58, 237, 0.1), 0 10px 10px -5px rgba(124, 58, 237, 0.04);
-        }
-    </style>
+    @section('title', 'Finapp - Perencanaan Keuangan Mudah untuk UMKM')
+    @include('partials.head')
+    <meta name="description" content="Finapp membantu pelaku UMKM mencatat transaksi, memantau kondisi keuangan, dan mendapat saran otomatis tanpa pusing spreadsheet.">
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-    <div class="min-h-screen">
-        <!-- Navigation -->
-        <nav class="bg-white dark:bg-gray-800 shadow-lg fixed w-full z-50 transition-colors duration-300">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between h-20">
-                    <div class="flex items-center space-x-3">
-                        <img src="{{ asset('images/logoF-Photoroom.png') }}" alt="Finapp Logo" class="h-20 w-auto">
-                        <h1 class="text-2xl font-bold gradient-text">Finapp</h1>
-                    </div>
-                    <div class="flex items-center space-x-6">
-                        <a href="#features" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Features</a>
-                        <a href="#about" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">About</a>
-                        <a href="#testimonials" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Testimonials</a>
-                        <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-                            <i class="fas fa-sun text-yellow-500 dark:hidden"></i>
-                            <i class="fas fa-moon text-blue-300 hidden dark:block"></i>
-                        </button>
-                        <a href="{{ route('login') }}" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Login</a>
-                        <a href="{{ route('register') }}" class="bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg dark:bg-indigo-500 dark:hover:bg-indigo-600">Register</a>
-                    </div>
-                </div>
-            </div>
-        </nav>
+<body>
+    @php
+        $features = [
+            ['icon' => 'bar-chart', 'tone' => 'accent', 'title' => 'Pencatatan keuangan yang pintar', 'text' => 'Catat pemasukan dan pengeluaran per kategori, lalu lihat kondisi usahamu secara langsung lewat ringkasan dan laporan yang mudah dibaca.'],
+            ['icon' => 'sparkles', 'tone' => 'success', 'title' => 'Analisis dan saran otomatis', 'text' => 'Finapp membaca catatan transaksimu dan memberi saran sederhana yang bisa langsung dicoba untuk menjaga usaha tetap sehat.'],
+            ['icon' => 'book-open', 'tone' => 'warning', 'title' => 'Pusat edukasi keuangan', 'text' => 'Kumpulan artikel dan panduan untuk menambah pemahaman keuangan, agar keputusan usahamu lebih percaya diri.'],
+        ];
+        $reasons = [
+            'Tampilan mudah, dirancang untuk yang bukan ahli keuangan',
+            'Pantau dan lihat laporan keuangan kapan saja',
+            'Bisa dibuka dari mana saja lewat HP maupun komputer',
+            'Fokus pada kebutuhan pemilik UMKM',
+        ];
+        $testimonials = [
+            ['name' => 'Budi Santoso', 'role' => 'Pemilik usaha cuci helm', 'text' => 'Finapp mengubah cara saya mengatur keuangan usaha. Saran otomatisnya membantu saya mengambil keputusan yang lebih baik.'],
+            ['name' => 'Siti Rahayu', 'role' => 'Pemilik usaha kecil', 'text' => 'Fitur pencatatannya gampang sekali dipakai. Sekarang saya bisa fokus mengembangkan usaha tanpa pusing soal keuangan.'],
+            ['name' => 'Ahmad Rizki', 'role' => 'Wirausahawan', 'text' => 'Analisisnya membantu saya melihat peluang baru dan merapikan operasional usaha. Sangat direkomendasikan!'],
+        ];
+    @endphp
 
-        <!-- Hero Section -->
-        <div class="pt-32 pb-20 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 transition-colors duration-300">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center" data-aos="fade-up">
-                    <h1 class="text-5xl font-extrabold text-gray-900 dark:text-white sm:text-6xl sm:tracking-tight lg:text-7xl mb-6">
-                        Smart Financial Planning for 
-                        <span class="gradient-text">UMKM</span>
-                    </h1>
-                    <p class="mt-5 max-w-2xl mx-auto text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
-                        Transform your helmet cleaning business with AI-powered financial insights. 
-                        Track, analyze, and optimize your finances with our comprehensive suite of tools.
-                    </p>
-                    <div class="mt-10 flex justify-center space-x-4">
-                        <a href="{{ route('register') }}" class="group bg-indigo-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-indigo-700 transition-all shadow-lg hover:shadow-xl hover-scale dark:bg-indigo-500 dark:hover:bg-indigo-600">
-                            Start Free Trial
-                            <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
-                        </a>
-                        <a href="#features" class="group bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 px-8 py-4 rounded-full text-lg font-semibold border-2 border-indigo-600 dark:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-gray-700 transition-all shadow-lg hover:shadow-xl hover-scale">
-                            Learn More
-                            <i class="fas fa-chevron-down ml-2 transform group-hover:translate-y-1 transition-transform"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="mt-16 relative" data-aos="fade-up" data-aos-delay="200">
-                    <div class="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 dark:from-indigo-500/10 dark:to-purple-500/10 rounded-2xl blur-3xl"></div>
-                    <img src="/images/dashboard.png" alt="Dashboard Preview" class="rounded-lg shadow-2xl mx-auto max-w-4xl w-full animate-float relative z-10">
-                </div>
+    {{-- Navigasi --}}
+    <header class="fixed inset-x-0 top-0 z-50 px-4 pt-3 sm:px-6">
+        <div class="chrome mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 rounded-full pl-5 pr-2">
+            <a href="{{ url('/') }}" aria-label="Finapp, ke atas"><x-logo chrome /></a>
+            <nav class="hidden items-center gap-1 md:flex" aria-label="Bagian halaman">
+                @foreach ([['#fitur', 'Fitur'], ['#tentang', 'Tentang'], ['#testimoni', 'Testimoni']] as [$href, $label])
+                    <a href="{{ $href }}" class="inline-flex min-h-11 items-center rounded-full px-4 text-callout font-medium text-chrome-fg-muted transition-colors hover:bg-chrome-hover hover:text-chrome-fg">{{ $label }}</a>
+                @endforeach
+            </nav>
+            <div class="flex items-center gap-1">
+                <x-theme-toggle chrome />
+                <a href="{{ route('login') }}" class="hidden min-h-11 items-center rounded-full px-4 text-callout font-medium text-chrome-fg-muted transition-colors hover:bg-chrome-hover hover:text-chrome-fg sm:inline-flex">Masuk</a>
+                <a href="{{ route('register') }}" class="inline-flex min-h-11 items-center rounded-full bg-white px-5 text-callout font-medium text-primary-800 transition-transform hover:scale-[1.03] active:scale-[0.98]">Daftar</a>
             </div>
         </div>
+    </header>
 
-        <!-- Features Section -->
-        <div id="features" class="py-20 bg-white dark:bg-gray-800 transition-colors duration-300">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16" data-aos="fade-up">
-                    <h2 class="text-4xl font-bold text-gray-900 dark:text-white">Powerful Features for Your Business</h2>
-                    <p class="mt-4 text-xl text-gray-600 dark:text-gray-300">Everything you need to manage your finances effectively</p>
-                </div>
-                <div class="grid grid-cols-1 gap-12 md:grid-cols-3">
-                    <!-- Feature 1 -->
-                    <div class="feature-card bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl" data-aos="fade-up" data-aos-delay="100">
-                        <div class="w-16 h-16 bg-indigo-100 dark:bg-indigo-900/50 rounded-full flex items-center justify-center mb-6">
-                            <i class="fas fa-chart-line text-2xl text-indigo-600 dark:text-indigo-400"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Smart Financial Tracking</h3>
-                        <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
-                            Automatically categorize and track all your income and expenses. Get real-time insights into your business performance with detailed analytics and customizable reports.
+    <main>
+        {{-- Hero --}}
+        <section class="mx-auto max-w-6xl px-4 pb-16 pt-32 text-center sm:px-6 sm:pt-40">
+            <h1 class="animate-enter mx-auto max-w-3xl text-[2.5rem] font-semibold leading-[1.08] tracking-tight text-fg sm:text-6xl">
+                Perencanaan keuangan yang mudah untuk <span class="bg-gradient-to-r from-primary-600 via-primary-500 to-pink-500 bg-clip-text text-transparent">UMKM</span>
+            </h1>
+            <p class="animate-enter mx-auto mt-6 max-w-2xl text-body leading-relaxed text-fg-muted sm:text-xl">
+                Catat transaksi, pantau kondisi keuangan, dan dapatkan saran otomatis. Semua dalam beberapa klik, tanpa pusing dengan spreadsheet.
+            </p>
+            <div class="animate-enter mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <x-button :href="route('register')" size="lg" icon-right="arrow-right" class="w-full sm:w-auto">Coba gratis</x-button>
+                <x-button href="#fitur" variant="secondary" size="lg" class="w-full sm:w-auto">Pelajari lebih lanjut</x-button>
+            </div>
+
+            <div class="glass mx-auto mt-14 max-w-4xl overflow-hidden rounded-sheet p-2 sm:p-3">
+                <img src="{{ asset('images/dashboard-preview-light.webp') }}" alt="Tampilan halaman Beranda Finapp" width="1280" height="800" class="w-full rounded-[1.1rem] dark:hidden">
+                <img src="{{ asset('images/dashboard-preview-dark.webp') }}" alt="Tampilan halaman Beranda Finapp dalam mode gelap" width="1280" height="800" class="hidden w-full rounded-[1.1rem] dark:block">
+            </div>
+        </section>
+
+        {{-- Fitur --}}
+        <section id="fitur" class="mx-auto max-w-6xl scroll-mt-24 px-4 py-16 sm:px-6">
+            <div class="mx-auto max-w-2xl text-center">
+                <h2 class="text-title text-fg sm:text-largetitle">Fitur untuk membantu usahamu</h2>
+                <p class="mt-3 text-body text-fg-muted">Semua yang kamu perlukan untuk mengelola keuangan dengan tenang.</p>
+            </div>
+            <div class="mt-10 grid gap-5 md:grid-cols-3">
+                @foreach ($features as $f)
+                    @php $chip = ['accent' => 'bg-accent-soft text-accent', 'success' => 'bg-success-soft text-success-fg', 'warning' => 'bg-warning-soft text-warning-fg'][$f['tone']]; @endphp
+                    <x-card interactive padding="lg">
+                        <span class="grid size-12 place-items-center rounded-2xl {{ $chip }}"><x-icon :name="$f['icon']" class="size-6" /></span>
+                        <h3 class="mt-5 text-headline text-fg">{{ $f['title'] }}</h3>
+                        <p class="mt-2 text-callout leading-relaxed text-fg-muted">{{ $f['text'] }}</p>
+                    </x-card>
+                @endforeach
+            </div>
+        </section>
+
+        {{-- Tentang --}}
+        <section id="tentang" class="mx-auto max-w-6xl scroll-mt-24 px-4 py-16 sm:px-6">
+            <x-card padding="lg" class="sm:!p-12">
+                <div class="grid items-center gap-10 lg:grid-cols-2">
+                    <div>
+                        <h2 class="text-title text-fg sm:text-largetitle">Kenapa memilih Finapp?</h2>
+                        <p class="mt-4 text-body leading-relaxed text-fg-muted">
+                            Finapp dirancang khusus untuk pemilik UMKM yang ingin memegang kendali atas keuangan usahanya. Alat keuangan yang kuat kami bungkus dalam tampilan yang ramah, supaya kamu bisa mengambil keputusan usaha dengan lebih baik.
                         </p>
                     </div>
-
-                    <!-- Feature 2 -->
-                    <div class="feature-card bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl" data-aos="fade-up" data-aos-delay="200">
-                        <div class="w-16 h-16 bg-purple-100 dark:bg-purple-900/50 rounded-full flex items-center justify-center mb-6">
-                            <i class="fas fa-robot text-2xl text-purple-600 dark:text-purple-400"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">AI-Powered Insights</h3>
-                        <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
-                            Leverage advanced AI algorithms to predict trends, identify opportunities, and receive personalized recommendations for business growth and financial optimization.
-                        </p>
-                    </div>
-
-                    <!-- Feature 3 -->
-                    <div class="feature-card bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl" data-aos="fade-up" data-aos-delay="300">
-                        <div class="w-16 h-16 bg-pink-100 dark:bg-pink-900/50 rounded-full flex items-center justify-center mb-6">
-                            <i class="fas fa-graduation-cap text-2xl text-pink-600 dark:text-pink-400"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Financial Education Hub</h3>
-                        <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
-                            Access a comprehensive library of resources, articles, and guides to improve your financial literacy and make informed business decisions.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- About Section -->
-        <div id="about" class="py-20 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                    <div data-aos="fade-right">
-                        <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-6">Why Choose Finapp?</h2>
-                        <p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
-                            Finapp is specifically designed for UMKM owners who want to take control of their business finances. Our platform combines powerful financial tools with user-friendly interfaces to help you make better business decisions.
-                        </p>
-                        <ul class="space-y-4">
-                            <li class="flex items-center space-x-3 group">
-                                <div class="w-8 h-8 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                                    <i class="fas fa-check-circle text-green-500 dark:text-green-400"></i>
-                                </div>
-                                <span class="text-gray-600 dark:text-gray-300">Easy-to-use interface designed for non-financial experts</span>
+                    <ul class="space-y-3">
+                        @foreach ($reasons as $reason)
+                            <li class="flex items-start gap-3 rounded-control bg-surface/60 p-4">
+                                <span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-success-soft text-success-fg"><x-icon name="check" class="size-3.5" /></span>
+                                <span class="text-callout text-fg">{{ $reason }}</span>
                             </li>
-                            <li class="flex items-center space-x-3 group">
-                                <div class="w-8 h-8 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                                    <i class="fas fa-check-circle text-green-500 dark:text-green-400"></i>
-                                </div>
-                                <span class="text-gray-600 dark:text-gray-300">Real-time financial monitoring and reporting</span>
-                            </li>
-                            <li class="flex items-center space-x-3 group">
-                                <div class="w-8 h-8 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                                    <i class="fas fa-check-circle text-green-500 dark:text-green-400"></i>
-                                </div>
-                                <span class="text-gray-600 dark:text-gray-300">Secure cloud-based platform accessible anywhere</span>
-                            </li>
-                            <li class="flex items-center space-x-3 group">
-                                <div class="w-8 h-8 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                                    <i class="fas fa-check-circle text-green-500 dark:text-green-400"></i>
-                                </div>
-                                <span class="text-gray-600 dark:text-gray-300">Dedicated support team for UMKM owners</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="relative" data-aos="fade-left">
-                        <div class="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 dark:from-indigo-500/10 dark:to-purple-500/10 rounded-2xl blur-3xl"></div>
-                        <img src="/images/about-illustration.svg" alt="About Finapp" class="rounded-lg shadow-xl relative z-10">
-                    </div>
+                        @endforeach
+                    </ul>
                 </div>
+            </x-card>
+        </section>
+
+        {{-- Testimoni (contoh) --}}
+        <section id="testimoni" class="mx-auto max-w-6xl scroll-mt-24 px-4 py-16 sm:px-6">
+            <div class="mx-auto max-w-2xl text-center">
+                <h2 class="text-title text-fg sm:text-largetitle">Kata pengguna</h2>
+                <p class="mt-3 text-body text-fg-muted">Cerita dari pemilik usaha yang terbantu Finapp.</p>
             </div>
+            <div class="mt-10 grid gap-5 md:grid-cols-3">
+                @foreach ($testimonials as $t)
+                    <x-card as="figure" padding="lg" class="flex flex-col">
+                        <blockquote class="flex-1 text-callout leading-relaxed text-fg">“{{ $t['text'] }}”</blockquote>
+                        <figcaption class="mt-6 flex items-center gap-3">
+                            <span aria-hidden="true" class="grid size-11 shrink-0 place-items-center rounded-full bg-accent-soft text-callout font-semibold text-accent">{{ mb_substr($t['name'], 0, 1) }}</span>
+                            <span>
+                                <span class="block text-callout font-medium text-fg">{{ $t['name'] }}</span>
+                                <span class="block text-footnote text-fg-muted">{{ $t['role'] }}</span>
+                            </span>
+                        </figcaption>
+                    </x-card>
+                @endforeach
+            </div>
+        </section>
+
+        {{-- Ajakan --}}
+        <section class="mx-auto max-w-6xl px-4 pb-24 pt-8 sm:px-6">
+            <div class="rounded-sheet bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 px-6 py-14 text-center text-white shadow-float sm:px-12">
+                <h2 class="mx-auto max-w-xl text-title sm:text-largetitle">Siap merapikan keuangan usahamu?</h2>
+                <p class="mx-auto mt-4 max-w-xl text-body text-white/85">Mulai gratis hari ini dan lihat kondisi usahamu dengan lebih jelas.</p>
+                <a href="{{ route('register') }}" class="mt-8 inline-flex min-h-12 items-center justify-center gap-2 rounded-control bg-white px-7 text-body font-medium text-primary-800 transition-transform hover:scale-[1.02] active:scale-[0.98]">
+                    Mulai sekarang <x-icon name="arrow-right" class="size-5" />
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-line">
+        <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-4 py-10 sm:flex-row sm:px-6">
+            <div class="text-center sm:text-left">
+                <x-logo />
+                <p class="mt-1 text-footnote text-fg-muted">Perencanaan keuangan mudah untuk pemilik UMKM.</p>
+            </div>
+            <nav class="flex flex-wrap items-center justify-center gap-x-2" aria-label="Tautan footer">
+                @foreach ([['#fitur', 'Fitur'], ['#tentang', 'Tentang'], ['#testimoni', 'Testimoni']] as [$href, $label])
+                    <a href="{{ $href }}" class="inline-flex min-h-11 items-center px-3 text-callout text-fg-muted transition-colors hover:text-fg">{{ $label }}</a>
+                @endforeach
+                <a href="{{ route('login') }}" class="inline-flex min-h-11 items-center px-3 text-callout text-fg-muted transition-colors hover:text-fg">Masuk</a>
+            </nav>
         </div>
-
-        <!-- Testimonials Section -->
-        <div id="testimonials" class="py-20 bg-white dark:bg-gray-800 transition-colors duration-300">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16" data-aos="fade-up">
-                    <h2 class="text-4xl font-bold text-gray-900 dark:text-white">What Our Users Say</h2>
-                    <p class="mt-4 text-xl text-gray-600 dark:text-gray-300">Join hundreds of satisfied UMKM owners</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Testimonial 1 -->
-                    <div class="glass-effect p-8 rounded-2xl shadow-lg hover-scale" data-aos="fade-up" data-aos-delay="100">
-                        <div class="flex items-center mb-6">
-                            <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/50 rounded-full flex items-center justify-center">
-                                <i class="fas fa-user text-indigo-600 dark:text-indigo-400"></i>
-                            </div>
-                            <div class="ml-4">
-                                <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Budi Santoso</h4>
-                                <p class="text-gray-600 dark:text-gray-300">Helmet Cleaning Business Owner</p>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 dark:text-gray-300 italic">"Finapp has transformed how I manage my business finances. The AI insights have helped me make better decisions and grow my business."</p>
-                    </div>
-
-                    <!-- Testimonial 2 -->
-                    <div class="glass-effect p-8 rounded-2xl shadow-lg hover-scale" data-aos="fade-up" data-aos-delay="200">
-                        <div class="flex items-center mb-6">
-                            <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/50 rounded-full flex items-center justify-center">
-                                <i class="fas fa-user text-purple-600 dark:text-purple-400"></i>
-                            </div>
-                            <div class="ml-4">
-                                <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Siti Rahayu</h4>
-                                <p class="text-gray-600 dark:text-gray-300">Small Business Owner</p>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 dark:text-gray-300 italic">"The financial tracking features are incredibly easy to use. I can now focus on growing my business instead of worrying about finances."</p>
-                    </div>
-
-                    <!-- Testimonial 3 -->
-                    <div class="glass-effect p-8 rounded-2xl shadow-lg hover-scale" data-aos="fade-up" data-aos-delay="300">
-                        <div class="flex items-center mb-6">
-                            <div class="w-12 h-12 bg-pink-100 dark:bg-pink-900/50 rounded-full flex items-center justify-center">
-                                <i class="fas fa-user text-pink-600 dark:text-pink-400"></i>
-                            </div>
-                            <div class="ml-4">
-                                <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Ahmad Rizki</h4>
-                                <p class="text-gray-600 dark:text-gray-300">Entrepreneur</p>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 dark:text-gray-300 italic">"The AI-powered insights have helped me identify new opportunities and optimize my business operations. Highly recommended!"</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Call to Action -->
-        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-700 dark:to-purple-700">
-            <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:py-20 lg:px-8 lg:flex lg:items-center lg:justify-between">
-                <div class="text-center lg:text-left" data-aos="fade-right">
-                <h2 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                        <span class="block">Ready to transform your business?</span>
-                        <span class="block text-indigo-200 dark:text-indigo-100 mt-2">Start your free trial today.</span>
-                </h2>
-                    <p class="mt-4 text-lg text-indigo-100 dark:text-indigo-200">
-                        Join hundreds of UMKM owners who are already using Finapp to grow their businesses.
-                    </p>
-                </div>
-                <div class="mt-8 flex lg:mt-0 lg:flex-shrink-0 justify-center lg:justify-end" data-aos="fade-left">
-                    <div class="inline-flex rounded-full shadow">
-                        <a href="{{ route('register') }}" class="group inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-medium rounded-full text-indigo-600 bg-white hover:bg-indigo-50 transition-colors hover-scale">
-                            Get Started Now
-                            <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <footer class="bg-gray-900 text-white py-12">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                    <div>
-                        <div class="flex items-center space-x-3 mb-4">
-                            <img src="{{ asset('images/logoF-Photoroom.png') }}" alt="Finapp Logo" class="h-16 w-auto">
-                            <h3 class="text-xl font-bold">Finapp</h3>
-                        </div>
-                        <p class="text-gray-400">Smart financial planning for UMKM owners.</p>
-                    </div>
-                    <div>
-                        <h4 class="text-lg font-semibold mb-4">Features</h4>
-                        <ul class="space-y-2 text-gray-400">
-                            <li><a href="#" class="hover:text-white transition-colors">Financial Tracking</a></li>
-                            <li><a href="#" class="hover:text-white transition-colors">AI Analysis</a></li>
-                            <li><a href="#" class="hover:text-white transition-colors">Reports</a></li>
-                            <li><a href="#" class="hover:text-white transition-colors">Education Hub</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 class="text-lg font-semibold mb-4">Company</h4>
-                        <ul class="space-y-2 text-gray-400">
-                            <li><a href="#" class="hover:text-white transition-colors">About Us</a></li>
-                            <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
-                            <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
-                            <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 class="text-lg font-semibold mb-4">Connect</h4>
-                        <div class="flex space-x-4">
-                            <a href="#" class="text-gray-400 hover:text-white transition-colors hover:scale-110 transform">
-                                <i class="fab fa-facebook-f"></i>
-                            </a>
-                            <a href="#" class="text-gray-400 hover:text-white transition-colors hover:scale-110 transform">
-                                <i class="fab fa-twitter"></i>
-                            </a>
-                            <a href="#" class="text-gray-400 hover:text-white transition-colors hover:scale-110 transform">
-                                <i class="fab fa-instagram"></i>
-                            </a>
-                            <a href="#" class="text-gray-400 hover:text-white transition-colors hover:scale-110 transform">
-                                <i class="fab fa-linkedin-in"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400">
-                    <p>&copy; 2024 Finapp. All rights reserved.</p>
-                </div>
-            </div>
-        </footer>
-    </div>
-
-    <script>
-        // Initialize AOS
-        AOS.init({
-            duration: 1000,
-            once: true,
-            offset: 100
-        });
-
-        // Dark mode toggle
-        const themeToggle = document.getElementById('theme-toggle');
-        const html = document.documentElement;
-
-        // Check for saved theme preference
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            html.classList.add('dark');
-        } else {
-            html.classList.remove('dark');
-        }
-
-        // Toggle theme
-        themeToggle.addEventListener('click', () => {
-            html.classList.toggle('dark');
-            localStorage.theme = html.classList.contains('dark') ? 'dark' : 'light';
-        });
-
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-    </script>
+        <p class="pb-8 text-center text-footnote text-fg-subtle">&copy; {{ date('Y') }} Finapp. Hak cipta dilindungi.</p>
+    </footer>
 </body>
-</html> 
+</html>
