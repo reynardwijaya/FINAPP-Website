@@ -29,7 +29,7 @@
    semantik (bg-surface, text-fg, border-line, ...) tanpa `dark:`.
    Aturan menambah warna: lihat docs/design-system.md.
    ========================================================================== */
-@theme {
+@theme static {
     /* Tipografi */
     --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Inter Variable', 'Inter',
         system-ui, sans-serif;
@@ -69,13 +69,13 @@
     --color-primary-950: #1f1342;
 
     /* Permukaan & teks (terang) */
-    --color-canvas: #fafafc;
+    --color-canvas: #f5f3fd; /* spec #FAFAFC; sedikit lavender agar tidak terasa putih polos */
     --color-surface: #ffffff;
     --color-surface-elevated: #ffffff;
     --color-surface-muted: #f4f3f9;
     --color-fg: #1d1b2e;
     --color-fg-muted: #5b5870;
-    --color-fg-subtle: #6b6880; /* spec #8E8BA3 hanya 3.3:1, dinaikkan ke 5.4:1 */
+    --color-fg-subtle: #625f78; /* spec #8E8BA3 hanya 3.3:1; #625F78 tetap AA di atas glass berwarna */
     --color-line: #eceaf3;
     --color-line-strong: #dad7e6;
 
@@ -101,9 +101,33 @@
     --color-info-fg: #2a66c9;
     --color-info-soft: #eaf2ff;
 
-    /* Lapisan */
+    /* Lapisan & glass. glass = panel/kartu; glass-strong = menu, modal, sidebar, toast (lebih pekat agar teks tetap AA). */
     --color-overlay: rgb(29 27 46 / 0.4);
-    --color-glass: rgb(250 250 252 / 0.72);
+    --color-glass: rgb(255 255 255 / 0.58);
+    --color-glass-strong: rgb(255 255 255 / 0.74);
+    --color-glass-border: rgb(29 27 46 / 0.08);
+    --shadow-glass: inset 0 1px 0 rgb(255 255 255 / 0.7), 0 8px 32px -12px rgb(29 27 46 / 0.14);
+
+    /* Chrome (sidebar, top bar, tab bar): ungu tua translusen di mode terang; di mode gelap mengikuti glass gelap. */
+    --chrome-from: rgb(100 58 200 / 0.92);
+    --chrome-to: rgb(72 40 148 / 0.94);
+    --chrome-border: rgb(255 255 255 / 0.16);
+    --shadow-chrome: inset 0 1px 0 rgb(255 255 255 / 0.18), 0 12px 32px -12px rgb(74 42 151 / 0.55);
+    --color-chrome-fg: #ffffff;
+    --color-chrome-fg-muted: rgb(255 255 255 / 0.88);
+    --color-chrome-hover: rgb(255 255 255 / 0.14);
+    --color-chrome-active: rgb(255 255 255 / 0.24);
+    --color-chrome-active-fg: #ffffff;
+    --color-chrome-line: rgb(255 255 255 / 0.2);
+
+    /* Cahaya ambient di belakang glass (halus; set transparent untuk mematikan) */
+    --ambient-1: rgb(167 139 250 / 0.5);
+    --ambient-2: rgb(244 114 182 / 0.24);
+    --ambient-3: rgb(96 165 250 / 0.3);
+    --ambient-4: rgb(52 211 153 / 0.2);
+
+    /* Glow ungu untuk tombol utama */
+    --shadow-primary: 0 1px 2px rgb(95 54 191 / 0.25), 0 8px 20px -8px rgb(117 70 224 / 0.55);
 
     /* Bentuk */
     --radius-control: 0.75rem;
@@ -125,8 +149,6 @@
     --animate-sheet: sheet 300ms var(--ease-ios) both;
     --animate-fade: fade 180ms ease-out both;
     --animate-shimmer: shimmer 1.6s ease-in-out infinite;
-    --animate-gradient-xy: gradient-xy 15s ease infinite;
-    --animate-float: float 6s ease-in-out infinite;
 
     @keyframes enter {
         from {
@@ -165,26 +187,6 @@
             opacity: 0.55;
         }
     }
-    @keyframes gradient-xy {
-        0%,
-        100% {
-            background-size: 400% 400%;
-            background-position: left center;
-        }
-        50% {
-            background-size: 200% 200%;
-            background-position: right center;
-        }
-    }
-    @keyframes float {
-        0%,
-        100% {
-            transform: translateY(0);
-        }
-        50% {
-            transform: translateY(-20px);
-        }
-    }
 }
 
 /* Mode gelap: ungu sangat tua (bukan hitam). Kedalaman dari tingkat surface. */
@@ -218,11 +220,87 @@
     --color-info-soft: rgb(110 166 255 / 0.14);
 
     --color-overlay: rgb(5 4 10 / 0.62);
-    --color-glass: rgb(14 12 22 / 0.72);
+    --color-glass: rgb(31 27 49 / 0.58);
+    --color-glass-strong: rgb(28 24 46 / 0.78);
+    --color-glass-border: rgb(255 255 255 / 0.09);
+    --shadow-glass: inset 0 1px 0 rgb(255 255 255 / 0.06), 0 8px 32px -12px rgb(0 0 0 / 0.55);
+
+    --chrome-from: rgb(31 27 49 / 0.8);
+    --chrome-to: rgb(23 20 37 / 0.8);
+    --chrome-border: rgb(255 255 255 / 0.09);
+    --shadow-chrome: inset 0 1px 0 rgb(255 255 255 / 0.06), 0 8px 32px -12px rgb(0 0 0 / 0.55);
+    --color-chrome-fg: #f3f1fa;
+    --color-chrome-fg-muted: #b4b0c8;
+    --color-chrome-hover: rgb(255 255 255 / 0.06);
+    --color-chrome-active: rgb(139 92 246 / 0.16);
+    --color-chrome-active-fg: #c4b0ff;
+    --color-chrome-line: #2a2640;
+
+    --ambient-1: rgb(117 70 224 / 0.32);
+    --ambient-2: rgb(95 54 191 / 0.24);
+    --ambient-3: rgb(76 141 246 / 0.12);
+    --ambient-4: rgb(52 211 153 / 0.05);
+
+    --shadow-primary: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 20px -8px rgb(117 70 224 / 0.6);
 
     --shadow-card: 0 0 #0000;
     --shadow-raised: 0 0 #0000;
     --shadow-float: 0 12px 32px -8px rgb(0 0 0 / 0.5);
+}
+
+/* Efek glass: latar translusen + blur + hairline + highlight tipis. */
+@utility glass {
+    background-color: var(--color-glass);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    backdrop-filter: blur(24px) saturate(160%);
+    border: 1px solid var(--color-glass-border);
+    box-shadow: var(--shadow-glass);
+}
+@utility glass-strong {
+    background-color: var(--color-glass-strong);
+    -webkit-backdrop-filter: blur(32px) saturate(170%);
+    backdrop-filter: blur(32px) saturate(170%);
+    border: 1px solid var(--color-glass-border);
+    box-shadow: var(--shadow-glass);
+}
+/* Chrome navigasi: gradien ungu translusen + blur. */
+@utility chrome {
+    background-image: linear-gradient(165deg, var(--chrome-from), var(--chrome-to));
+    -webkit-backdrop-filter: blur(28px) saturate(160%);
+    backdrop-filter: blur(28px) saturate(160%);
+    border: 1px solid var(--chrome-border);
+    box-shadow: var(--shadow-chrome);
+}
+
+/* Fallback: tanpa dukungan blur atau saat pengguna meminta transparansi dikurangi, permukaan jadi solid. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass {
+        background-color: var(--color-surface);
+    }
+    .glass-strong {
+        background-color: var(--color-surface-elevated);
+    }
+}
+@media (prefers-reduced-transparency: reduce) {
+    .glass,
+    .glass-strong {
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+    .glass {
+        background-color: var(--color-surface);
+    }
+    .glass-strong {
+        background-color: var(--color-surface-elevated);
+    }
+    .chrome {
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+        background-image: linear-gradient(165deg, var(--chrome-to), var(--chrome-to));
+    }
+    body::before {
+        display: none;
+    }
 }
 
 /* Token khusus Chart.js, dibaca oleh resources/js/charts.js */
@@ -269,6 +347,18 @@
         font-feature-settings: 'cv11', 'ss01';
         min-height: 100dvh;
     }
+    body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        background:
+            radial-gradient(56rem 42rem at 4% -6%, var(--ambient-1), transparent 62%),
+            radial-gradient(48rem 38rem at 100% 0%, var(--ambient-2), transparent 60%),
+            radial-gradient(52rem 44rem at -4% 102%, var(--ambient-3), transparent 62%),
+            radial-gradient(46rem 40rem at 102% 104%, var(--ambient-4), transparent 62%);
+    }
     ::selection {
         background: var(--color-accent-soft);
         color: var(--color-fg);
@@ -291,6 +381,45 @@
     }
 }
 
+/* Isi artikel (HTML dari database) */
+@layer components {
+    .article-body {
+        @apply text-body leading-8 text-fg-muted;
+    }
+    .article-body > * + * {
+        margin-top: 1.25em;
+    }
+    .article-body h2 {
+        @apply mt-10 text-title text-fg;
+    }
+    .article-body h3 {
+        @apply mt-8 text-headline text-fg;
+    }
+    .article-body strong {
+        @apply font-semibold text-fg;
+    }
+    .article-body a {
+        @apply text-accent underline underline-offset-2;
+    }
+    .article-body ul {
+        list-style: disc;
+        padding-left: 1.25em;
+    }
+    .article-body ol {
+        list-style: decimal;
+        padding-left: 1.25em;
+    }
+    .article-body li + li {
+        margin-top: 0.4em;
+    }
+    .article-body blockquote {
+        @apply border-l-[3px] border-accent pl-4 text-fg;
+    }
+    .article-body img {
+        @apply rounded-card;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -299,36 +428,5 @@
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
-    }
-}
-
-/* ==========================================================================
-   LEGACY (transisi Fase 3)
-   Dipakai halaman yang belum dimigrasi. Hapus saat halaman terakhir selesai.
-   ========================================================================== */
-@layer components {
-    .card {
-        transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-    .glass-effect {
-        background: var(--color-glass);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid var(--color-line);
-    }
-    .gradient-text {
-        background: linear-gradient(45deg, #5f36bf, #8b5cf6);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    .hover-scale {
-        transition: transform 0.2s var(--ease-ios);
-    }
-    .hover-scale:hover {
-        transform: scale(1.02);
-    }
-    .feature-card {
-        transition: border-color 0.2s ease;
     }
 }

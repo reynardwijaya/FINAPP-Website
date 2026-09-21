@@ -178,6 +178,8 @@ export function create(canvas, builder) {
     const el = typeof canvas === 'string' ? document.getElementById(canvas) : canvas;
     if (!el) return null;
     const entry = { canvas: el, build: builder, chart: null };
+    // Panggil entry.rebuild() bila data yang dipakai builder berubah (mis. filter).
+    entry.rebuild = (animate = true) => build(entry, { animate });
     registry.add(entry);
     build(entry);
     return entry;

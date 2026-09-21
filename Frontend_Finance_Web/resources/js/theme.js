@@ -29,7 +29,7 @@ function resolve(mode) {
 function apply(mode) {
     const resolved = resolve(mode);
     root.classList.toggle('dark', resolved === 'dark');
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', resolved === 'dark' ? '#0e0c16' : '#fafafc');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', resolved === 'dark' ? '#0e0c16' : '#f5f3fd');
     return resolved;
 }
 

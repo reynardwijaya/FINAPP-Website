@@ -28,9 +28,4 @@ const toast = (message, type = 'success') =>
 window.Finapp = { theme, charts, toast };
 window.Alpine = Alpine;
 
-// LEGACY: dipakai halaman yang belum dimigrasi ke helper charts (Fase 3).
-window.Chart = charts.Chart;
-window.getCurrentTheme = () => theme.resolved;
-window.themeColors = { light: { chart: { category1: '#7546e0' } }, dark: { chart: { category1: '#a688fb' } } };
-
 Alpine.start();
