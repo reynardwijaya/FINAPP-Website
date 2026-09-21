@@ -1,78 +1,103 @@
-# Finapp 💰
+# Finapp
 
-Finapp adalah aplikasi web pencatatan dan analisis keuangan yang dirancang khusus untuk pelaku UMKM. Alih-alih pusing dengan spreadsheet, pemilik usaha kecil bisa mencatat transaksi, memantau kondisi keuangan, dan mendapat rekomendasi otomatis hanya dalam beberapa klik.
+Finapp adalah aplikasi web pencatatan dan analisis keuangan untuk pelaku UMKM. Alih-alih pusing dengan spreadsheet, pemilik usaha kecil bisa mencatat transaksi, memantau kondisi keuangan, dan mendapat saran sederhana hanya dalam beberapa klik. Antarmukanya berbahasa Indonesia, mobile-first, dengan tema terang, gelap, dan ikut sistem.
 
-- 📊 Dashboard yang merangkum kondisi keuangan usaha secara sekilas
-- 💸 Pencatatan transaksi pemasukan & pengeluaran per kategori
-- 🧮 Analisis keuangan otomatis dengan rekomendasi actionable berbasis data transaksi
-- 📈 Laporan & statistik keuangan untuk melihat tren dari waktu ke waktu
-- 📚 Artikel edukasi finansial khusus untuk pelaku UMKM
+## Fitur
+
+- **Beranda**: saldo bulan ini, pemasukan, pengeluaran, tren 6 bulan, dan pembagian per kategori
+- **Transaksi**: catat pemasukan dan pengeluaran per kategori, hapus dengan konfirmasi
+- **Kategori**: buat, ubah, dan hapus kategori dengan warna dan ikon
+- **Laporan**: saring transaksi berdasarkan tanggal dan jenis
+- **Analisis**: ringkasan dan saran otomatis (bulanan atau tahunan) berbasis aturan sederhana dari data transaksi
+- **Artikel edukasi**: cari, filter topik, dan baca artikel keuangan untuk UMKM
+- **Profil dan pengaturan**: foto, nama, email, kata sandi, dan tema tampilan
+- **Login dan daftar** lewat drawer di landing page
 
 ## Tech Stack
 
 | Layer | Teknologi |
 |---|---|
-| Web Framework | Laravel 11 (PHP 8.2) |
-| Frontend / UI | Blade Templates, Alpine.js, Tailwind CSS 4 |
-| Build Tool | Vite 6 |
-| Visualisasi Data | Chart.js |
-| Database | MySQL / SQLite |
-| Backend API (AI Service) | Go 1.23 (net/http) |
-| AI Model | Google Gemini API |
+| Web framework | Laravel 12 (PHP 8.2+) |
+| Frontend | Blade, Alpine.js 3, Tailwind CSS 4 |
+| Build tool | Vite 6 |
+| Grafik | Chart.js 4 |
+| Database | SQLite (default) atau MySQL |
+| Test | PHPUnit 11 |
+| Service AI (terpisah, opsional) | Go 1.23 dan Google Gemini API |
 
-## Environment Variables
+Service Go di `Backend_Go` berdiri sendiri dan belum dipanggil oleh aplikasi web. Analisis di aplikasi web dihasilkan oleh aturan PHP, bukan AI.
 
-**Frontend_Finance_Web** (`.env`, salin dari `.env.example`):
-| Variabel | Keterangan |
-|---|---|
-| `APP_KEY` | Kunci enkripsi Laravel, generate otomatis via `php artisan key:generate` |
-| `APP_URL` | Base URL aplikasi saat development/production |
-| `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` | Kredensial koneksi database (MySQL lokal via XAMPP, atau biarkan default sqlite) |
+## Struktur Repo
 
-**Backend_Go** (`.env`, salin dari `.env.example`):
-| Variabel | Keterangan |
-|---|---|
-| `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`, `DB_NAME` | Kredensial koneksi MySQL |
-| `GEMINI_API_KEY` | API key untuk Google Gemini, ambil dari [Google AI Studio](https://aistudio.google.com/) > API Keys |
+```text
+FINAPP-Website/
+├── Frontend_Finance_Web/   # Aplikasi web Laravel
+└── Backend_Go/             # Service AI (Go), opsional
+```
 
-## Cara Instalasi & Menjalankan
+## Instalasi
 
-Prasyarat:
-- PHP >= 8.2 & Composer
-- Node.js >= 18 & npm
-- Go >= 1.23
-- MySQL (mis. via XAMPP) atau gunakan default SQLite
-- API key Google Gemini (untuk fitur analisis AI)
+Prasyarat: PHP 8.2+ (ekstensi `pdo_sqlite`, `mbstring`, `openssl`, `fileinfo`), Composer 2, Node.js 18+ dengan npm. Go 1.23 dan MySQL hanya dibutuhkan untuk `Backend_Go`.
 
 ```bash
-# 1. Clone repository
 git clone https://github.com/reynardwijaya/FINAPP-Website.git
-cd FINAPP-Website
+cd FINAPP-Website/Frontend_Finance_Web
 
-# 2. Setup web app (Laravel)
-cd Frontend_Finance_Web
 composer install
 cp .env.example .env
 php artisan key:generate
-# sesuaikan kredensial DB di .env, lalu:
+touch database/database.sqlite
 php artisan migrate
-npm install
-npm run dev
-
-# 3. Jalankan server Laravel (di terminal terpisah)
-php artisan serve
-
-# 4. Setup Go backend (opsional, service AI terpisah)
-cd ../Backend_Go
-cp .env.example .env
-# isi GEMINI_API_KEY dan kredensial DB di .env
-go run ./cmd/server
+php artisan storage:link
+npm ci
 ```
 
-Script tambahan yang berguna:
+Di PowerShell, gunakan `Copy-Item .env.example .env` dan `New-Item -ItemType File database/database.sqlite`.
+
+## Menjalankan
+
+Buka dua terminal di `Frontend_Finance_Web`:
 
 ```bash
-npm run build        # build asset frontend untuk production (Frontend_Finance_Web)
-php artisan test     # jalankan test suite Laravel (Frontend_Finance_Web)
-go build ./cmd/server # build binary Go backend (Backend_Go)
+php artisan serve     # http://127.0.0.1:8000
+npm run dev           # Vite dev server
 ```
+
+Buka <http://127.0.0.1:8000> lalu klik **Daftar** untuk membuat akun.
+
+### Service Go (opsional)
+
+```bash
+cd Backend_Go
+cp .env.example .env      # isi GEMINI_API_KEY dan kredensial MySQL
+go run ./cmd/server       # http://127.0.0.1:8080
+```
+
+## Environment Variables
+
+| Lokasi | Variabel | Keterangan |
+|---|---|---|
+| `Frontend_Finance_Web/.env` | `APP_KEY` | Dibuat oleh `php artisan key:generate` |
+| | `APP_URL`, `APP_ENV`, `APP_DEBUG` | Base URL, lingkungan, dan mode debug |
+| | `DB_CONNECTION` | `sqlite` (default) atau `mysql` |
+| | `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` | Hanya jika memakai MySQL |
+| `Backend_Go/.env` | `GEMINI_API_KEY` | Wajib; ambil dari [Google AI Studio](https://aistudio.google.com/) |
+| | `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`, `DB_NAME` | Koneksi MySQL |
+
+Jangan meng-commit file `.env`.
+
+## Perintah Berguna
+
+Jalankan di `Frontend_Finance_Web`:
+
+```bash
+php artisan test      # 23 test (unit dan feature)
+npm run build         # build asset production
+```
+
+## Dokumentasi
+
+Dokumentasi lengkap (arsitektur, struktur proyek, testing, deployment, troubleshooting, dan keterbatasan) ada di repo dokumentasi:
+<https://github.com/reynardwijaya/Reynard-Documentation>
+
+Panduan design system (token, komponen, aturan tema): [`Frontend_Finance_Web/docs/design-system.md`](Frontend_Finance_Web/docs/design-system.md).
