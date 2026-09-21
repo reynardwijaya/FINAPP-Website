@@ -5,13 +5,13 @@
 @section('content')
 @php
     $activeTag = request('tag');
-    $hasFilter = request()->hasAny(['search', 'tag', 'category']);
+    $hasFilter = request()->hasAny(['search', 'tag']);
 @endphp
 
 <x-page-header title="Artikel" subtitle="Bacaan singkat untuk membantu mengelola keuangan usaha kecil." />
 
 <div class="space-y-6">
-    {{-- Cari & saring (GET; query string search / tag / category sama seperti sebelumnya) --}}
+    {{-- Cari & saring (GET; query string search / tag sama seperti sebelumnya) --}}
     <x-card>
         <form method="GET" action="{{ route('articles.index') }}" class="flex flex-col gap-3 sm:flex-row">
             <div class="relative flex-1">
@@ -20,19 +20,6 @@
                 <input type="search" id="search" name="search" value="{{ request('search') }}" placeholder="Cari judul, isi, atau penulis"
                        class="block min-h-11 w-full rounded-control border border-line-strong bg-surface/70 pl-10 pr-3.5 text-body text-fg backdrop-blur-sm placeholder:text-fg-subtle focus:border-ring focus:bg-surface focus:outline-none focus:ring-[3px] focus:ring-ring/25">
             </div>
-            @if ($categories->isNotEmpty())
-                <div class="relative sm:w-56">
-                    <label for="category" class="sr-only">Kategori</label>
-                    <select id="category" name="category" onchange="this.form.requestSubmit()"
-                            class="block min-h-11 w-full appearance-none rounded-control border border-line-strong bg-surface/70 pl-3.5 pr-10 text-body text-fg backdrop-blur-sm focus:border-ring focus:outline-none focus:ring-[3px] focus:ring-ring/25">
-                        <option value="">Semua kategori</option>
-                        @foreach ($categories as $category)
-                            <option value="{{ $category->slug }}" @selected(request('category') == $category->slug)>{{ $category->name }}</option>
-                        @endforeach
-                    </select>
-                    <x-icon name="chevron-down" class="pointer-events-none absolute right-3.5 top-1/2 size-4 -translate-y-1/2 text-fg-subtle" />
-                </div>
-            @endif
             @if ($activeTag)<input type="hidden" name="tag" value="{{ $activeTag }}">@endif
             <x-button type="submit" icon="search">Cari</x-button>
         </form>
@@ -49,12 +36,6 @@
             </div>
         @endif
     </x-card>
-
-    @if ($categories->isNotEmpty())
-        <x-card title="Jumlah artikel per kategori">
-            <div class="h-64"><canvas id="articlesCategoryChart" role="img" aria-label="Grafik batang jumlah artikel per kategori"></canvas></div>
-        </x-card>
-    @endif
 
     {{-- Daftar artikel --}}
     @if ($articles->isEmpty())
@@ -95,23 +76,3 @@
     @endif
 </div>
 @endsection
-
-@if ($categories->isNotEmpty())
-@push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const { charts } = window.Finapp;
-    const labels = @js($categories->pluck('name'));
-    const counts = @js($categories->pluck('articles_count'));
-    charts.create('articlesCategoryChart', (t) => ({
-        type: 'bar',
-        data: { labels, datasets: [{ label: 'Artikel', data: counts, backgroundColor: t.primary, borderRadius: 8, maxBarThickness: 40 }] },
-        options: {
-            plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `${c.parsed.y} artikel` } } },
-            scales: { ...charts.axes(t, { currency: false }), y: { ...charts.axes(t, { currency: false }).y, ticks: { ...charts.axes(t).y.ticks, precision: 0, callback: (v) => v } } },
-        },
-    }));
-});
-</script>
-@endpush
-@endif

@@ -49,8 +49,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const emptyHint = document.getElementById('category-empty');
     let oldCategoryId = categorySelect.dataset.oldCategory;
 
+    let latestRequest = 0;
+
     async function loadCategories() {
         const selectedType = typeSelect.value;
+        const request = ++latestRequest;
         categorySelect.innerHTML = '<option value="">Pilih kategori</option>';
         emptyHint.classList.add('hidden');
         if (!selectedType) return;
@@ -59,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(`/categories/type/${selectedType}`);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const categories = await response.json();
+            if (request !== latestRequest) return; // jenis sudah diganti; abaikan respons lama
 
             categories.forEach(category => {
                 const option = document.createElement('option');

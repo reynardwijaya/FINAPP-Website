@@ -47,12 +47,12 @@ const rupiahFormat = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }
 const compactFormat = new Intl.NumberFormat('id-ID', { notation: 'compact', maximumFractionDigits: 1 });
 
 /** 1250000 -> "Rp 1.250.000" */
-export const rupiah = (value) => `Rp ${rupiahFormat.format(Number(value) || 0)}`;
+const rupiah = (value) => `Rp ${rupiahFormat.format(Number(value) || 0)}`;
 /** 1250000 -> "Rp 1,3 jt" (untuk sumbu grafik) */
-export const rupiahCompact = (value) => `Rp ${compactFormat.format(Number(value) || 0)}`;
+const rupiahCompact = (value) => `Rp ${compactFormat.format(Number(value) || 0)}`;
 
 /** Baca token tema aktif dari CSS variable. */
-export function tokens() {
+function tokens() {
     const css = getComputedStyle(document.documentElement);
     const get = (name) => css.getPropertyValue(name).trim();
     return {
@@ -196,4 +196,3 @@ document.addEventListener('finapp:theme', () => {
     }
 });
 
-export { Chart };

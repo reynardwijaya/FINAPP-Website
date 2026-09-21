@@ -66,25 +66,9 @@
             </div>
         @endif
 
-        @if (! empty($analysis->related_resources))
-            <div class="mt-6">
-                <h3 class="flex items-center gap-2 text-headline text-fg"><x-icon name="book-open" class="text-accent" />Bacaan yang membantu</h3>
-                <div class="mt-3 grid gap-3 sm:grid-cols-2">
-                    @foreach ($analysis->related_resources as $resource)
-                        <a href="{{ $resource['url'] }}" class="flex min-h-14 items-center gap-3 rounded-control border border-line bg-surface/60 p-3.5 transition-colors hover:bg-surface">
-                            <span class="grid size-10 shrink-0 place-items-center rounded-full bg-accent-soft text-accent">
-                                <x-icon :name="$resource['type'] === 'article' ? 'newspaper' : 'play-circle'" />
-                            </span>
-                            <span class="min-w-0 flex-1">
-                                <span class="block truncate text-callout font-medium text-fg">{{ $resource['title'] }}</span>
-                                <span class="text-footnote text-fg-muted">{{ $resource['type'] === 'article' ? 'Artikel' : 'Video' }}</span>
-                            </span>
-                            <x-icon name="chevron-right" class="size-4 text-fg-subtle" />
-                        </a>
-                    @endforeach
-                </div>
-            </div>
-        @endif
+        <div class="mt-6">
+            <x-button :href="route('articles.index')" variant="secondary" icon="book-open">Baca artikel edukasi</x-button>
+        </div>
     </x-card>
 
     <div class="grid gap-6 lg:grid-cols-2">
