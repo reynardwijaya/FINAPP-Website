@@ -60,10 +60,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/picture', [ProfileController::class, 'updateProfilePicture'])->name('profile.updateProfilePicture');
 });
 
-Route::get('/analyze-form', function () {
-    return view('finance-analyzer');
-});
-
 // Settings Routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
