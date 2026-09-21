@@ -118,7 +118,7 @@ Bobot hanya 400/500/600. Angka uang memakai class `num` (`tabular-nums`), format
 ## Layout
 
 - `layouts/app.blade.php`: shell aplikasi (sidebar melayang di desktop, tab bar melayang di mobile, top bar: pil kanan atas di desktop / selebar layar di mobile). Daftar menu ada di satu tempat (`$navItems`, `$navSecondary`) dan dipakai sidebar, tab bar, dan menu akun.
-- `layouts/guest.blade.php`: halaman auth. `welcome.blade.php` memakai `partials/head` yang sama.
+- Login/Register bukan halaman terpisah: `<x-auth-drawer>` (drawer kaca membulat dari kanan) di `welcome.blade.php`. `/login` dan `/register` menampilkan landing dengan drawer terbuka; `_form` (hidden) menentukan form mana yang dibuka lagi bila validasi gagal.
 - Pagination memakai `resources/views/vendor/pagination/tailwind.blade.php` (Bahasa Indonesia, gaya sama).
 - Judul halaman: `@section('title', '…')`. Skrip halaman: `@push('scripts')` (dirender di akhir `<body>`).
 

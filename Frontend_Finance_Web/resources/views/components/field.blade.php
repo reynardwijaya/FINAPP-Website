@@ -1,8 +1,8 @@
 {{-- Pembungkus label + pesan bantuan/kesalahan untuk kontrol form. Error diambil dari $errors berdasarkan `name`. --}}
-@props(['label' => null, 'name' => null, 'hint' => null, 'optional' => false, 'for' => null])
+@props(['label' => null, 'name' => null, 'hint' => null, 'optional' => false, 'for' => null, 'bag' => null])
 @php
     $id = $for ?? $name;
-    $error = $name ? $errors->first($name) : null;
+    $error = $name ? ($bag ?? $errors)->first($name) : null;
 @endphp
 <div {{ $attributes->class('space-y-1.5') }}>
     @if ($label)
